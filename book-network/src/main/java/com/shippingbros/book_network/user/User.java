@@ -1,5 +1,7 @@
 package com.shippingbros.book_network.user;
 
+import com.shippingbros.book_network.book.Book;
+import com.shippingbros.book_network.history.BookTransactionHistory;
 import com.shippingbros.book_network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,6 +45,13 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
     // private List of tokens,
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> histories;
+
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

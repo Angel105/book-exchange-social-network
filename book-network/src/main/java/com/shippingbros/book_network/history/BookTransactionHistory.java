@@ -1,7 +1,8 @@
-package com.shippingbros.book_network.feedback;
+package com.shippingbros.book_network.history;
 
 import com.shippingbros.book_network.book.Book;
 import com.shippingbros.book_network.common.BaseEntity;
+import com.shippingbros.book_network.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,13 +18,19 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Feedback extends BaseEntity {
+public class BookTransactionHistory extends BaseEntity {
 
-    private Double note; // 1-5 stars
-    private String comment;
-
+    // user relationship
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    // book relationship
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
+    private boolean returned;
+    private boolean returnApproved;
+
 
 }

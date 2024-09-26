@@ -1,6 +1,7 @@
 package com.shippingbros.book_network.book;
 
 import com.shippingbros.book_network.user.User;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,11 @@ public class BookService {
         Book book = bookMapper.toBook(request);
         book.setOwner(user);
         return repository.save(book).getId();
+    }
+
+    public BookResponse findById(Integer bookId) {
+        return repository.findById(bookId)
+                .map(bookMapper::toBookResponse)
+                .orElseThrow(()-> new EntityNotFoundException("No book found with ID::"+bookId));
     }
 }

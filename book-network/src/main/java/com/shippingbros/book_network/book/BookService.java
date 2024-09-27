@@ -132,4 +132,17 @@ public class BookService {
         return book.getId();
     }
 
+    public Integer updateArchivedStatus(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(()-> new EntityNotFoundException("No book found with ID::"+bookId));
+        User user = (User) connectedUser.getPrincipal();
+        if (!Objects.equals(book.getOwner().getId(), user.getId())) {
+            // throw an exception
+            throw new OperationNotPermittedException("You cannot update book's archived status");
+        }
+        // just inverse the book sharable status
+        book.setArchived(!book.isArchived());
+        bookRepository.save(book);
+        return book.getId();
+    }
 }

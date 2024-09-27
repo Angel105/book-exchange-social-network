@@ -16,9 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import static com.shippingbros.book_network.book.BookSpecification.*;
+import static com.shippingbros.book_network.book.BookSpecification.withOwnerId;
 
 @Service
 @RequiredArgsConstructor
@@ -192,6 +191,24 @@ public class BookService {
                 .orElseThrow(()-> new OperationNotPermittedException("You did not borrow this book. You cannot return it."));
 
         bookTransactionHistory.setReturned(true);
+        return transactionHistoryRepository.save(bookTransactionHistory).getId();
+    }
+
+    public Integer approveReturnBorrowedBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(()-> new EntityNotFoundException("No book found with ID::"+bookId));
+        // check if the book is archived or not sharable
+        if (book.isArchived() || !book.isShareable()) {
+            throw new OperationNotPermittedException("The requested book cannot be borrowed since it is archived or not sharable");
+        }
+        User user = (User) connectedUser.getPrincipal();
+        if (Objects.equals(book.getOwner().getId(), user.getId())) {
+            // throw an exception
+            throw new OperationNotPermittedException("You cannot borrow or return your own book");
+        }
+        BookTransactionHistory bookTransactionHistory = transactionHistoryRepository.findByBookIdAndOwnerId(bookId, user.getId())
+                .orElseThrow(()-> new OperationNotPermittedException("This book is not returned yet. You cannot approve its return."));
+        bookTransactionHistory.setReturnApproved(true);
         return transactionHistoryRepository.save(bookTransactionHistory).getId();
     }
 

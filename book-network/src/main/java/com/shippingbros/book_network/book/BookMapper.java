@@ -3,6 +3,8 @@ package com.shippingbros.book_network.book;
 import com.shippingbros.book_network.history.BookTransactionHistory;
 import org.springframework.stereotype.Service;
 
+import static com.shippingbros.book_network.file.FileUtils.readFileFromLocation;
+
 @Service
 public class BookMapper {
     public Book toBook(BookRequest request) {
@@ -28,8 +30,7 @@ public class BookMapper {
                 .archived(book.isArchived())
                 .shareable(book.isShareable())
                 .owner(book.getOwner().fullName())
-                // TODO implement cover
-                // .cover()
+                .cover(readFileFromLocation(book.getBookCover()))
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.shippingbros.book_network.book;
 
 import com.shippingbros.book_network.common.PageResponse;
+import com.shippingbros.book_network.exception.OperationNotPermittedException;
 import com.shippingbros.book_network.history.BookTransactionHistory;
 import com.shippingbros.book_network.history.BookTransactionHistoryRepository;
 import com.shippingbros.book_network.user.User;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.shippingbros.book_network.book.BookSpecification.*;
 
@@ -115,4 +117,19 @@ public class BookService {
                 allBorrowedBooks.isLast()
         );
     }
+
+    public Integer updateSharableStatus(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(()-> new EntityNotFoundException("No book found with ID::"+bookId));
+        User user = (User) connectedUser.getPrincipal();
+        if (!Objects.equals(book.getOwner().getId(), user.getId())) {
+            // throw an exception
+            throw new OperationNotPermittedException("You cannot update book's sharable status");
+        }
+        // just inverse the book sharable status
+        book.setShareable(!book.isShareable());
+        bookRepository.save(book);
+        return book.getId();
+    }
+
 }

@@ -70,7 +70,13 @@ export class MyBooksComponent implements OnInit {
   }
 
   shareBook(book: BookResponse) {
-
+    this.bookService.updateSharableStatus({
+      'book-id': book.id as number
+    }).subscribe({
+      next: () => {
+        book.shareable = !book.shareable;
+      }
+    });
   }
 
   editBook(book: BookResponse) {

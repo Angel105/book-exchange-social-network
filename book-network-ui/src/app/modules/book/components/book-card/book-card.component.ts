@@ -33,7 +33,7 @@ export class BookCardComponent {
 
   get bookCover(): string | undefined {
     if (this._book.cover) {
-      return 'data:image/jpeg;base64, ' + this._book.cover;
+      return 'data:image/jpeg;base64,' + this._book.cover;
     }
     // return 'https://source.unsplash.com/user/c_v_r/1900x800';
     return '';

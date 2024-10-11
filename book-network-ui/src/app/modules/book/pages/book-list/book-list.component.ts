@@ -33,6 +33,7 @@ export class BookListComponent implements OnInit {
     }).subscribe({
       next: (books) => {
         this.bookResponse = books;
+        console.log('Book response:', this.bookResponse);
       }
     });
   }

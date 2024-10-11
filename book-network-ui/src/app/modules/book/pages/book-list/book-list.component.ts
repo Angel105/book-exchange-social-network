@@ -13,6 +13,7 @@ export class BookListComponent implements OnInit {
   page: number = 0;
   size: number = 5;
 
+
   constructor(
     private bookService: BookService,
     private router: Router
@@ -32,5 +33,34 @@ export class BookListComponent implements OnInit {
         this.bookResponse = books;
       }
     });
+  }
+
+  gotoFirstPage() {
+    this.page = 0;
+    this.findAllBooks();
+  }
+
+  gotoPreviousPage() {
+    this.page --;
+    this.findAllBooks();
+  }
+
+  gotoPage(page: number) {
+    this.page = page;
+    this.findAllBooks();
+  }
+
+  gotoNextPage() {
+    this.page ++;
+    this.findAllBooks();
+  }
+
+  gotoLastPage() {
+    this.page = this.bookResponse.totalPages as number - 1;
+    this.findAllBooks();
+  }
+
+  get isLastPage(): boolean {
+    return this.page == this.bookResponse.totalPages as number - 1;
   }
 }

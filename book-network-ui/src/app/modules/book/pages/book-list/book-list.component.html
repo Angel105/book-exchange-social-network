@@ -1,5 +1,51 @@
 <h3>Book List</h3>
 
 <div class="d-flex justify-content-start gap-2 flex-wrap">
-  <app-book-card [book]="book"  *ngFor="let book of bookResponse.content"></app-book-card>
+  <app-book-card
+    *ngFor="let book of bookResponse.content"
+    [book]="book"
+  ></app-book-card>
+</div>
+
+<div class="d-flex justify-content-center mt-3">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a href="javascript:void(0)" class="page-link" aria-label="First" (click)="gotoFirstPage()"
+           [class.disabled]="page === 0">
+          <i class="fa-solid fa-angles-left"></i>
+        </a>
+      </li>
+
+      <li class="page-item">
+        <a href="javascript:void(0)" class="page-link" aria-label="Previous" (click)="gotoPreviousPage()"
+           [class.disabled]="page === 0">
+          <i class="fa-solid fa-angle-left"></i>
+        </a>
+      </li>
+
+      <li class="page-item" *ngFor="let _ of [].constructor(this.bookResponse.totalPages); let pageIndex = index">
+        <a href="javascript:void(0)" class="page-link" aria-label="Goto Page" (click)="gotoPage(pageIndex)"
+           [class.active]="page == pageIndex">
+          {{ pageIndex + 1 }}
+        </a>
+      </li>
+
+
+      <li class="page-item">
+        <a href="javascript:void(0)" class="page-link" aria-label="Next" (click)="gotoNextPage()"
+           [class.disabled]="isLastPage">
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+      </li>
+
+      <li class="page-item">
+        <a href="javascript:void(0)" class="page-link" aria-label="Last" (click)="gotoLastPage()"
+           [class.disabled]="isLastPage">
+          <i class="fa-solid fa-angles-right"></i>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
 </div>

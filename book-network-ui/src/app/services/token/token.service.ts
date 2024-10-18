@@ -34,4 +34,21 @@ export class TokenService {
     }
     return true;
   }
+
+  getUsernameFromToken(): string | null {
+    const token = this.token;
+    if (token) {
+      const decodedToken = this.decode(token) as any;
+      return decodedToken?.fullName || null;
+    }
+    return null;
+  }
+
+  private decode(token: string) {
+    const jwtHelper = new JwtHelperService();
+    const decodedToken = jwtHelper.decodeToken(token);
+    // localStorage.setItem('decodedToken', JSON.stringify(decodedToken));
+    return decodedToken;
+  }
+
 }
